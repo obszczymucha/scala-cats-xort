@@ -1,8 +1,8 @@
-package main
+package greeter
 
 import cats.data.XorT
 import cats.implicits._
-import main.AsyncGreeter.{AppError, NoNameGiven}
+import greeter.AsyncGreeter.{AppError, NoNameGiven}
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.{Future, Promise}

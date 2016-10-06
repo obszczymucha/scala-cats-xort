@@ -1,4 +1,4 @@
-package main
+package greeter
 
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.{FunSpec, Matchers}
