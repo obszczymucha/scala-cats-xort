@@ -1,11 +1,9 @@
 package greeter
 
-import cats.data.XorT
-import cats.implicits._
+import cats.data.Xor
 import greeter.AsyncGreeter.{AppError, NoNameGiven}
 
-import scala.concurrent.ExecutionContext.Implicits._
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.{Future}
 
 object AsyncGreeter {
 
@@ -18,29 +16,15 @@ object AsyncGreeter {
 class AsyncGreeter {
 
   def greet(name: Option[String]): Future[String] = {
-    val promise: Promise[String] = Promise[String]
 
-    val result = for {
-      greeting <- sayHello(name)
-    } yield greeting
-
-    result.map(greeting => promise.success(greeting)).recover {
-      case NoNameGiven => promise.success("I cannot greet you if I don't know your name!")
-      case _ => promise.success("Boom headshot!")
-    }
-
-    promise.future
+    Future.successful(sayHello(name).getOrElse("I cannot greet you if I don't know your name!"))
   }
 
 
-  private def sayHello(maybeName: Option[String]): XorT[Future, AppError, String] = {
+  private def sayHello(maybeName: Option[String]): Xor[AppError, String] = {
     maybeName match {
-      case Some(name) => XorT.right(Future {
-        s"Hello, $name!"
-      })
-      case None => XorT.left(Future.successful {
-        NoNameGiven
-      })
+      case Some(name) => Xor.Right(s"Hello, $name!")
+      case None => Xor.Left(NoNameGiven)
     }
   }
 }
