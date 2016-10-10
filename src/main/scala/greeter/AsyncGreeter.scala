@@ -17,9 +17,7 @@ class AsyncGreeter {
 
   def greet(name: Option[String]): Future[String] = {
 
-    val response = sayHello(name).getOrElse("I cannot greet you if I don't know your name!")
-
-    Future.successful(response)
+    Future.successful(sayHello(name).getOrElse("I cannot greet you if I don't know your name!"))
   }
 
 
